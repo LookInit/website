@@ -1,7 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Check, Zap } from "lucide-react";
+import AuthModal from "@/components/AuthModal";
+
+const BASIC_PRICE_ID = "price_1Qw7XMB9l3mkM5VXZW4OGm8w";
+const PRO_PRICE_ID = "price_1QwOWKB9l3mkM5VXvYJ3PMo5";
 
 const plans = [
   {
@@ -10,7 +15,8 @@ const plans = [
     period: "forever",
     description: "Perfect for trying Lookinit out.",
     cta: "Get started",
-    href: "https://app.lookinit.com",
+    priceId: null,
+    type: "free",
     highlight: false,
     features: [
       "3 searches per day",
@@ -26,7 +32,8 @@ const plans = [
     period: "per month",
     description: "For daily users who want more.",
     cta: "Start Basic",
-    href: "https://app.lookinit.com/pro",
+    priceId: BASIC_PRICE_ID,
+    type: "paid",
     highlight: false,
     features: [
       "Unlimited searches",
@@ -42,7 +49,8 @@ const plans = [
     period: "per month",
     description: "For power users and researchers.",
     cta: "Start Pro",
-    href: "https://app.lookinit.com/pro",
+    priceId: PRO_PRICE_ID,
+    type: "paid",
     highlight: true,
     badge: "Most popular",
     features: [
@@ -60,6 +68,8 @@ const plans = [
     period: "contact us",
     description: "For teams and organisations.",
     cta: "Contact sales",
+    priceId: null,
+    type: "enterprise",
     href: "/enterprise",
     highlight: false,
     features: [
@@ -96,7 +106,25 @@ const faq = [
   },
 ];
 
+async function handleCheckout(priceId: string, setLoadingId: (id: string | null) => void, setAuthModal: (v: boolean) => void) {
+  setLoadingId(priceId);
+  try {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ priceId }),
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  } catch {
+    setLoadingId(null);
+  }
+}
+
 export default function PricingPage() {
+  const [authModal, setAuthModal] = useState<boolean>(false);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
   return (
     <div style={{ paddingTop: "80px" }}>
       {/* Header */}
@@ -251,26 +279,70 @@ export default function PricingPage() {
                 </p>
               </div>
 
-              <Link
-                href={plan.href}
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  padding: "10px",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  marginBottom: "28px",
-                  background: plan.highlight
-                    ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
-                    : "rgba(255,255,255,0.06)",
-                  color: plan.highlight ? "#fff" : "rgba(255,255,255,0.7)",
-                  border: plan.highlight ? "none" : "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                {plan.cta}
-              </Link>
+              {plan.type === "paid" ? (
+                <button
+                  onClick={() => handleCheckout(plan.priceId!, setLoadingId, setAuthModal)}
+                  disabled={loadingId === plan.priceId}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    marginBottom: "28px",
+                    cursor: loadingId === plan.priceId ? "not-allowed" : "pointer",
+                    opacity: loadingId === plan.priceId ? 0.7 : 1,
+                    background: plan.highlight
+                      ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
+                      : "rgba(255,255,255,0.06)",
+                    color: plan.highlight ? "#fff" : "rgba(255,255,255,0.7)",
+                    border: plan.highlight ? "none" : "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  {loadingId === plan.priceId ? "Loading..." : plan.cta}
+                </button>
+              ) : plan.type === "enterprise" ? (
+                <Link
+                  href="/enterprise"
+                  style={{
+                    display: "block",
+                    textAlign: "center",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    marginBottom: "28px",
+                    background: "rgba(255,255,255,0.06)",
+                    color: "rgba(255,255,255,0.7)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  {plan.cta}
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setAuthModal(true)}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    marginBottom: "28px",
+                    cursor: "pointer",
+                    background: "rgba(255,255,255,0.06)",
+                    color: "rgba(255,255,255,0.7)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  {plan.cta}
+                </button>
+              )}
 
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {plan.features.map((feat) => (
@@ -355,6 +427,10 @@ export default function PricingPage() {
           ))}
         </div>
       </section>
+
+      {authModal && (
+        <AuthModal defaultMode="signup" onClose={() => setAuthModal(false)} />
+      )}
     </div>
   );
 }
