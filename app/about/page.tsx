@@ -1,8 +1,23 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Lookinit",
+  title: "About",
   description: "Learn about Lookinit, our mission, and the team behind the AI-powered search engine.",
+  alternates: { canonical: "https://lookinit.com/about" },
+  openGraph: {
+    title: "About — Lookinit",
+    description: "Learn about Lookinit, our mission, and the team behind the AI-powered search engine.",
+    url: "https://lookinit.com/about",
+    siteName: "Lookinit",
+    images: [{ url: "https://lookinit.com/logo-white.png", width: 1920, height: 1080, alt: "Lookinit" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About — Lookinit",
+    description: "Learn about Lookinit, our mission, and the team behind the AI-powered search engine.",
+    images: ["https://lookinit.com/logo-white.png"],
+  },
 };
 
 export default function AboutPage() {

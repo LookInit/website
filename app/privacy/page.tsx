@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Lookinit",
+  title: "Privacy Policy",
   description: "Lookinit privacy policy — how we collect, use, and protect your data.",
+  alternates: { canonical: "https://lookinit.com/privacy" },
+  robots: { index: true, follow: false },
+  openGraph: {
+    title: "Privacy Policy — Lookinit",
+    description: "How Lookinit collects, uses, and protects your data.",
+    url: "https://lookinit.com/privacy",
+    siteName: "Lookinit",
+    type: "website",
+  },
 };
 
 const EFFECTIVE_DATE = "1 April 2025";

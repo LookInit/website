@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Lookinit",
+  title: "Terms of Service",
   description: "Lookinit terms of service — the rules for using our AI-powered search engine.",
+  alternates: { canonical: "https://lookinit.com/terms" },
+  robots: { index: true, follow: false },
+  openGraph: {
+    title: "Terms of Service — Lookinit",
+    description: "The rules for using Lookinit's AI-powered search engine.",
+    url: "https://lookinit.com/terms",
+    siteName: "Lookinit",
+    type: "website",
+  },
 };
 
 const EFFECTIVE_DATE = "1 April 2025";
