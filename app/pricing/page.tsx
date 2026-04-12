@@ -105,8 +105,13 @@ const faq = [
   },
 ];
 
-async function handleCheckout(priceId: string, setLoadingId: (id: string | null) => void) {
+async function handleCheckout(
+  priceId: string,
+  setLoadingId: (id: string | null) => void,
+  setError: (msg: string | null) => void,
+) {
   setLoadingId(priceId);
+  setError(null);
   try {
     const res = await fetch("/api/create-checkout-session", {
       method: "POST",
@@ -114,14 +119,21 @@ async function handleCheckout(priceId: string, setLoadingId: (id: string | null)
       body: JSON.stringify({ priceId }),
     });
     const data = await res.json();
-    if (data.url) window.location.href = data.url;
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      setError(data.error || "Something went wrong. Please try again.");
+      setLoadingId(null);
+    }
   } catch {
+    setError("Could not reach checkout. Please try again.");
     setLoadingId(null);
   }
 }
 
 export default function PricingPage() {
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div style={{ paddingTop: "80px" }}>
@@ -279,7 +291,7 @@ export default function PricingPage() {
 
               {plan.type === "paid" ? (
                 <button
-                  onClick={() => handleCheckout(plan.priceId!, setLoadingId)}
+                  onClick={() => handleCheckout(plan.priceId!, setLoadingId, setError)}
                   disabled={loadingId === plan.priceId}
                   style={{
                     display: "block",
@@ -370,6 +382,11 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+        {error && (
+          <p style={{ textAlign: "center", color: "#f87171", fontSize: "14px", marginTop: "24px" }}>
+            {error}
+          </p>
+        )}
       </section>
 
       {/* FAQ */}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 const links = [
@@ -49,19 +50,15 @@ export default function Navbar() {
           }}
         >
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none" }}>
-            <span
-              style={{
-                fontSize: "20px",
-                fontWeight: 700,
-                background: "linear-gradient(135deg, #fff 0%, #a5b4fc 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                letterSpacing: "-0.3px",
-              }}
-            >
-              lookinit
-            </span>
+          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <Image
+              src="/logo-white.png"
+              alt="Lookinit"
+              width={114}
+              height={64}
+              style={{ height: "48px", width: "auto" }}
+              priority
+            />
           </Link>
 
           {/* Desktop Links */}

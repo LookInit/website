@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 const sections = [
   {
@@ -24,9 +25,9 @@ const sections = [
   {
     title: "Company",
     links: [
-      { label: "About", href: "#" },
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
+      { label: "About", href: "/about" },
+      { label: "Privacy", href: "/privacy" },
+      { label: "Terms", href: "/terms" },
       { label: "Contact", href: "/enterprise#contact" },
     ],
   },
@@ -53,18 +54,14 @@ export default function Footer() {
         >
           {/* Brand */}
           <div>
-            <Link href="/" style={{ textDecoration: "none" }}>
-              <span
-                style={{
-                  fontSize: "22px",
-                  fontWeight: 700,
-                  background: "linear-gradient(135deg, #fff 0%, #a5b4fc 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                lookinit
-              </span>
+            <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
+              <Image
+                src="/logo-white.png"
+                alt="Lookinit"
+                width={114}
+                height={64}
+                style={{ height: "48px", width: "auto" }}
+              />
             </Link>
             <p
               style={{
