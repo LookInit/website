@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import AuthModal from "./AuthModal";
 
 const links = [
   { label: "Features", href: "/#features" },
@@ -16,7 +15,6 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [authModal, setAuthModal] = useState<"signin" | "signup" | null>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -88,8 +86,8 @@ export default function Navbar() {
 
           {/* CTA */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }} className="hidden md:flex">
-            <button
-              onClick={() => setAuthModal("signin")}
+            <a
+              href="https://app.lookinit.com/signin"
               style={{
                 background: "none",
                 border: "none",
@@ -97,26 +95,27 @@ export default function Navbar() {
                 fontSize: "14px",
                 fontWeight: 500,
                 cursor: "pointer",
+                textDecoration: "none",
                 padding: 0,
               }}
             >
               Sign in
-            </button>
-            <button
-              onClick={() => setAuthModal("signup")}
+            </a>
+            <a
+              href="https://app.lookinit.com/signup"
               style={{
                 background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
                 color: "#fff",
-                border: "none",
                 fontSize: "14px",
                 fontWeight: 600,
                 padding: "8px 18px",
                 borderRadius: "8px",
-                cursor: "pointer",
+                textDecoration: "none",
+                display: "inline-block",
               }}
             >
               Get started
-            </button>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -158,35 +157,30 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
-            <button
-              onClick={() => { setOpen(false); setAuthModal("signup"); }}
+            <a
+              href="https://app.lookinit.com/signup"
+              onClick={() => setOpen(false)}
               style={{
                 display: "block",
                 width: "100%",
                 marginTop: "16px",
                 background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
                 color: "#fff",
-                border: "none",
                 fontSize: "15px",
                 fontWeight: 600,
                 padding: "12px",
                 borderRadius: "8px",
                 textAlign: "center",
-                cursor: "pointer",
+                textDecoration: "none",
+                boxSizing: "border-box",
               }}
             >
               Get started free
-            </button>
+            </a>
           </div>
         )}
       </header>
 
-      {authModal && (
-        <AuthModal
-          defaultMode={authModal}
-          onClose={() => setAuthModal(null)}
-        />
-      )}
     </>
   );
 }

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check, Zap } from "lucide-react";
-import AuthModal from "@/components/AuthModal";
 
 const BASIC_PRICE_ID = "price_1Qw7XMB9l3mkM5VXZW4OGm8w";
 const PRO_PRICE_ID = "price_1QwOWKB9l3mkM5VXvYJ3PMo5";
@@ -106,7 +105,7 @@ const faq = [
   },
 ];
 
-async function handleCheckout(priceId: string, setLoadingId: (id: string | null) => void, setAuthModal: (v: boolean) => void) {
+async function handleCheckout(priceId: string, setLoadingId: (id: string | null) => void) {
   setLoadingId(priceId);
   try {
     const res = await fetch("/api/create-checkout-session", {
@@ -122,7 +121,6 @@ async function handleCheckout(priceId: string, setLoadingId: (id: string | null)
 }
 
 export default function PricingPage() {
-  const [authModal, setAuthModal] = useState<boolean>(false);
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
   return (
@@ -281,7 +279,7 @@ export default function PricingPage() {
 
               {plan.type === "paid" ? (
                 <button
-                  onClick={() => handleCheckout(plan.priceId!, setLoadingId, setAuthModal)}
+                  onClick={() => handleCheckout(plan.priceId!, setLoadingId)}
                   disabled={loadingId === plan.priceId}
                   style={{
                     display: "block",
@@ -323,11 +321,10 @@ export default function PricingPage() {
                   {plan.cta}
                 </Link>
               ) : (
-                <button
-                  onClick={() => setAuthModal(true)}
+                <a
+                  href="https://app.lookinit.com/signup"
                   style={{
                     display: "block",
-                    width: "100%",
                     textAlign: "center",
                     padding: "10px",
                     borderRadius: "8px",
@@ -338,10 +335,11 @@ export default function PricingPage() {
                     background: "rgba(255,255,255,0.06)",
                     color: "rgba(255,255,255,0.7)",
                     border: "1px solid rgba(255,255,255,0.1)",
+                    textDecoration: "none",
                   }}
                 >
                   {plan.cta}
-                </button>
+                </a>
               )}
 
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -428,9 +426,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {authModal && (
-        <AuthModal defaultMode="signup" onClose={() => setAuthModal(false)} />
-      )}
     </div>
   );
 }
