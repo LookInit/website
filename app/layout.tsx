@@ -13,11 +13,22 @@ export const metadata: Metadata = {
   title: "Lookinit — AI-Powered Search",
   description:
     "Lookinit is an AI search engine that delivers real answers with sources, images, and follow-up questions — powered by the latest LLMs.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
+  manifest: "/site.webmanifest",
   openGraph: {
     title: "Lookinit — AI-Powered Search",
     description: "Ask anything. Get real answers.",
     url: "https://lookinit.com",
     siteName: "Lookinit",
+    images: [{ url: "/logo-white.png" }],
     locale: "en_US",
     type: "website",
   },
@@ -25,6 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lookinit — AI-Powered Search",
     description: "Ask anything. Get real answers.",
+    images: ["/logo-white.png"],
   },
 };
 
