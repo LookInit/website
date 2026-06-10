@@ -1,0 +1,59 @@
+---
+title: "How RAG Makes AI Search Actually Useful"
+brief: "Why retrieval-augmented generation is the backbone of Lookinit"
+slug: "how-rag-makes-ai-search-actually-useful"
+publishedAt: "2024-10-06"
+readTimeInMinutes: 2
+tags: ["Engineering"]
+author:
+  name: "Lookinit"
+  profilePicture: ""
+---
+
+If you've ever asked an AI chatbot a question and gotten a confident but completely wrong answer, you've experienced hallucination. It's one of the biggest problems with large language models — they're trained on data with a cutoff date, they don't cite sources, and they sometimes just make things up.
+
+Retrieval-augmented generation, or RAG, is how we fix that at Lookinit.
+
+## What Is RAG?
+
+RAG is a technique that combines a language model with a real-time retrieval system. Instead of asking the model to answer purely from memory, you first fetch relevant documents from the web (or a knowledge base), then pass those documents to the model as context.
+
+The flow looks like this:
+
+1. User asks a question
+2. System fetches relevant web pages or documents
+3. Retrieved content is injected into the model's prompt
+4. Model generates an answer grounded in that content
+5. Sources are cited so users can verify
+
+## Why It Matters for Search
+
+Traditional search engines return a list of links. You then have to click through, read multiple pages, and synthesise the answer yourself. That's slow and frustrating.
+
+With RAG, Lookinit does that synthesis for you — but because the answer is grounded in real retrieved documents, it's far more accurate than a model answering from memory alone.
+
+## How We Implement It
+
+At Lookinit, when you submit a query:
+
+1. We run a web search to pull the top results
+2. We extract and chunk the content from those pages
+3. We score and rank chunks by relevance to your query
+4. We pass the top chunks to the language model with a structured prompt
+5. The model produces a cited, coherent answer
+
+We also run the retrieval and generation steps in parallel where possible to minimise latency. Most responses are back within two seconds.
+
+## The Semantic Cache Layer
+
+One optimisation we're particularly proud of is our semantic cache. Rather than caching by exact query string (which rarely repeats verbatim), we embed queries into vector space and cache by semantic similarity.
+
+If someone asked "what causes inflation" yesterday, and you ask "why does inflation happen" today, you'll get a near-instant response from cache — because those questions mean the same thing.
+
+This cuts our API costs significantly and makes repeat queries feel instant.
+
+## What's Next
+
+We're working on expanding RAG to include structured data sources — things like Wikipedia, academic papers, and live APIs — so Lookinit can answer a wider range of questions with even higher confidence.
+
+RAG isn't a silver bullet, but it's the closest thing to one we've found for building AI search that people can actually trust.

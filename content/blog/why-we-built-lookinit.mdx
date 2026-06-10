@@ -1,0 +1,52 @@
+---
+title: "Why We Built Lookinit"
+brief: "The search engine we always wanted — and couldn't find"
+slug: "why-we-built-lookinit"
+publishedAt: "2024-10-12"
+readTimeInMinutes: 2
+tags: ["Company"]
+author:
+  name: "Lookinit"
+  profilePicture: ""
+---
+
+Search hasn't fundamentally changed in decades.
+
+You type a query, you get ten blue links, you open four of them in tabs, you spend the next ten minutes reading and synthesising. Sometimes you find what you need. Often you give up and rephrase the query and try again.
+
+We built Lookinit because we were tired of that loop.
+
+## The Problem With Links
+
+Links are a great primitive. They're how the web is structured. But they're a terrible answer to the question "what is the capital of France?" or "how do I fix this Python error?" or "what's the best approach for building a vector search index?"
+
+For questions like those, what you want is an answer — direct, sourced, and fast. Not a list of pages that might contain an answer somewhere in their third paragraph.
+
+## What We Tried First
+
+Before building Lookinit, we used every AI search tool we could find. Some were impressive. Most had the same issues:
+
+- Slow response times (5–10 seconds)
+- Poor source quality (scraping irrelevant pages)
+- No transparency (where did this answer come from?)
+- Hallucinations on anything outside training data
+
+We wanted something that felt like asking a very well-read friend — someone who gives you a real answer, tells you where they got it from, and invites you to ask a follow-up.
+
+## The Stack We Chose
+
+Building fast, accurate AI search requires careful choices at every layer:
+
+**Retrieval** — we use a combination of web search APIs and direct scraping to pull fresh content for every query.
+
+**Models** — we use Groq for speed on everyday queries, and route complex or nuanced questions to more capable models like Claude.
+
+**Caching** — semantic caching means common queries are served from cache in milliseconds without sacrificing accuracy.
+
+**UI** — we designed the interface to show sources prominently, because trust is everything in search.
+
+## Where We Are Now
+
+Lookinit has served tens of thousands of searches. The most common feedback we get is that it feels faster and more direct than alternatives. That's intentional — every architectural decision we've made has been in service of reducing the time between question and answer.
+
+We're just getting started. If you haven't tried it yet, give it a go — it's free.

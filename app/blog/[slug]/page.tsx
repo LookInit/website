@@ -2,20 +2,21 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Clock } from "lucide-react";
-import { getPost, getPostSlugs, formatDate } from "@/lib/hashnode";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { getPost, getPostSlugs, formatDate } from "@/lib/blog";
+import ViewCounter from "@/components/ViewCounter";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const slugs = await getPostSlugs();
-  return slugs.map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return getPostSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = getPost(slug);
   if (!post) return {};
 
   const title = post.seo?.title || post.title;
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = getPost(slug);
   if (!post) notFound();
 
   const jsonLd = {
@@ -117,30 +118,32 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            {post.author.profilePicture && (
-              <img
-                src={post.author.profilePicture}
-                alt={post.author.name}
-                style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }}
-              />
-            )}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>
-              <span>{post.author.name}</span>
-              <span>·</span>
-              <Clock size={12} />
-              <span>{post.readTimeInMinutes} min read</span>
-              <span>·</span>
-              <span>{formatDate(post.publishedAt)}</span>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              {post.author.profilePicture && (
+                <img
+                  src={post.author.profilePicture}
+                  alt={post.author.name}
+                  style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }}
+                />
+              )}
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>
+                <span>{post.author.name}</span>
+                <span>·</span>
+                <Clock size={12} />
+                <span>{post.readTimeInMinutes} min read</span>
+                <span>·</span>
+                <span>{formatDate(post.publishedAt)}</span>
+              </div>
             </div>
+            <ViewCounter slug={post.slug} />
           </div>
         </header>
 
         {/* Body */}
-        <article
-          style={{ maxWidth: "760px", margin: "0 auto", padding: "0 24px" }}
-          dangerouslySetInnerHTML={{ __html: post.content.html }}
-        />
+        <article style={{ maxWidth: "760px", margin: "0 auto", padding: "0 24px" }}>
+          <MDXRemote source={post.content} />
+        </article>
 
         {/* Post styles */}
         <style>{`

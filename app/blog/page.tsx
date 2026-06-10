@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPosts, type PostSummary } from "@/lib/hashnode";
+import { getPosts, type PostSummary } from "@/lib/blog";
 import BlogCard from "@/components/BlogCard";
 
 export const metadata: Metadata = {
@@ -15,15 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BlogPage() {
-  let posts: PostSummary[] = [];
-  let error: string | null = null;
-
-  try {
-    posts = await getPosts();
-  } catch (err: any) {
-    error = err.message;
-  }
+export default function BlogPage() {
+  const posts: PostSummary[] = getPosts();
 
   return (
     <div style={{ paddingTop: "80px" }}>
@@ -51,17 +44,14 @@ export default async function BlogPage() {
       </section>
 
       <section style={{ padding: "0 24px 100px", maxWidth: "1100px", margin: "0 auto" }}>
-        {error && (
-          <p style={{ textAlign: "center", color: "#f87171", fontSize: "14px" }}>{error}</p>
-        )}
-        {!error && posts.length === 0 && (
+        {posts.length === 0 && (
           <p style={{ textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: "14px" }}>
             No posts yet — check back soon.
           </p>
         )}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "20px" }}>
           {posts.map((post) => (
-            <BlogCard key={post.id} post={post} />
+            <BlogCard key={post.slug} post={post} />
           ))}
         </div>
       </section>
