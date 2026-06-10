@@ -1,0 +1,53 @@
+---
+title: "Why We Moved to a Subdomain Architecture"
+brief: "Separating lookinit.com from app.lookinit.com was one of the best decisions we made"
+slug: "why-we-moved-to-a-subdomain-architecture"
+publishedAt: "2025-03-10"
+readTimeInMinutes: 2
+tags: ["Engineering"]
+author:
+  name: "Lookinit"
+  profilePicture: ""
+---
+
+When we first launched Lookinit, everything lived at the same domain. The marketing site, the app, the API — all one codebase, one deployment, one domain. It seemed simple. It wasn't.
+
+Six months in, we split the marketing site to lookinit.com and the app to app.lookinit.com. Here's why, and what we learned.
+
+## The Problem With Everything in One Place
+
+A combined marketing-plus-app setup creates real tensions:
+
+**Performance** — the app needs React state, authentication, real-time updates. The marketing site needs fast static rendering and SEO. These pull in opposite directions. Trying to optimise for both in a single Next.js app means compromising on both.
+
+**Deployment risk** — a bug in a new app feature shouldn't require redeploying the marketing site. But when they're the same codebase, they are the same deployment.
+
+**SEO** — search engines are good at crawling static content. App routes behind authentication are noise. Mixing them dilutes crawl budget and complicates indexing.
+
+**Team velocity** — as the codebase grew, the blast radius of any change was too large. A CSS refactor in the landing page could accidentally touch app components.
+
+## The Architecture We Landed On
+
+- **lookinit.com** — Next.js, statically rendered, deployed on Vercel, focused entirely on SEO and conversion
+- **app.lookinit.com** — Next.js with full client-side functionality, authentication, real-time search, also on Vercel
+
+Cross-domain authentication was the trickiest part. When a user signs up on the marketing site and gets redirected to the app, we need to pass auth state across domains. We solved this with short-lived signed tokens in the redirect URL — generated on the marketing domain, consumed immediately by the app.
+
+## What Got Better
+
+After the split:
+
+- Page load times on lookinit.com dropped by ~40% — no app JavaScript, no auth checks, pure static HTML
+- Lighthouse SEO score went to 100 on all marketing pages
+- Deployments became safer — we can update the marketing site without touching the app
+- Development is faster — contributors can work on the marketing site without needing the full app environment running
+
+## What Got Harder
+
+Keeping the two codebases consistent requires discipline. Shared components (like the design system) are duplicated — we haven't extracted a shared package yet, though that's on the roadmap.
+
+Cross-domain session management adds complexity. It works, but it's more moving parts than a single-domain setup.
+
+## Would We Do It Again?
+
+Yes, without hesitation. The performance and SEO gains alone justified the migration. If you're running a SaaS product with both a marketing site and an app, splitting them is worth the one-time investment.

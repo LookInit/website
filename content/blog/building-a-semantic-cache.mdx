@@ -1,0 +1,56 @@
+---
+title: "Building a Semantic Cache: How We Cut API Costs by 30%"
+brief: "Caching by meaning, not text, is one of the best optimisations we've made"
+slug: "building-a-semantic-cache"
+publishedAt: "2024-12-20"
+readTimeInMinutes: 2
+tags: ["Engineering"]
+author:
+  name: "Lookinit"
+  profilePicture: ""
+---
+
+Caching is one of the oldest tricks in software engineering. But traditional caching — storing results keyed by exact input — barely works for AI search. Users rarely ask the exact same question twice. They rephrase, restructure, and approach the same topic from different angles.
+
+We needed a smarter cache. One that matches by meaning rather than text. That's semantic caching, and it's cut our inference API costs by 30%.
+
+## How Traditional Caching Fails
+
+A normal key-value cache stores: "what is photosynthesis?" → [answer]. If the next user asks "explain photosynthesis to me", they get a cache miss and we pay for a full API call — even though the answer is identical.
+
+With hundreds of queries per minute, those missed cache hits add up fast.
+
+## The Semantic Approach
+
+Semantic caching adds a vector similarity layer:
+
+1. When a query comes in, we embed it into a vector using a fast embedding model
+2. We search our cache index for any stored queries within a cosine similarity threshold (we use 0.92)
+3. If a match is found, we return the cached answer immediately
+4. If not, we run the full pipeline, then store the result with its embedding for future hits
+
+The result: queries that mean the same thing share a cache entry, even if the wording differs.
+
+## The Stack
+
+We use Upstash Vector for the cache index. It's serverless, edge-deployed, and the free tier is generous enough to cover our early traffic entirely.
+
+For embeddings we use a small, fast model — accuracy matters less here than speed, since we're only doing similarity matching, not answer generation.
+
+## Results
+
+After rolling out semantic caching:
+
+- **30% reduction** in inference API calls
+- **~180ms** average latency on cache hits vs ~1.8s for full pipeline
+- **Zero noticeable quality difference** — users can't tell when they're hitting cache
+
+The 0.92 similarity threshold is key. Too low and you serve irrelevant cached answers. Too high and you miss obvious matches. We tuned it by manually reviewing a sample of matched pairs.
+
+## One Gotcha
+
+Time-sensitive queries need special handling. "What's the weather today?" should never be served from cache. We detect time-sensitive queries with a lightweight classifier and bypass the cache entirely for those.
+
+## Worth It?
+
+Absolutely. The implementation took a few days and has paid for itself many times over. If you're building any kind of AI application with repeated or similar queries, semantic caching should be one of the first optimisations you reach for.

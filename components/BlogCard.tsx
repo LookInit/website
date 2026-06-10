@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
-import { formatDate, type PostSummary } from "@/lib/hashnode";
+import { formatDate } from "@/lib/format";
+import type { PostSummary } from "@/lib/blog";
+import ViewCounter from "@/components/ViewCounter";
 
 const tagColor = (tag: string): [string, string] => {
   const map: Record<string, [string, string]> = {
@@ -76,7 +78,10 @@ export default function BlogCard({ post }: { post: PostSummary }) {
               <Clock size={12} />
               {post.readTimeInMinutes} min · {formatDate(post.publishedAt)}
             </div>
-            <ArrowRight size={14} style={{ color: "rgba(255,255,255,0.3)" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <ViewCounter slug={post.slug} readOnly />
+              <ArrowRight size={14} style={{ color: "rgba(255,255,255,0.3)" }} />
+            </div>
           </div>
         </div>
       </article>

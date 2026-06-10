@@ -1,0 +1,60 @@
+---
+title: "Groq vs Claude vs Mistral for AI Search"
+brief: "We ran 500 real queries through three leading models. Here's what we found."
+slug: "groq-vs-claude-vs-mistral-for-ai-search"
+publishedAt: "2024-11-18"
+readTimeInMinutes: 2
+tags: ["Engineering"]
+author:
+  name: "Lookinit"
+  profilePicture: ""
+---
+
+Not all language models are equal — and for search specifically, the differences matter a lot. Speed, accuracy, and the ability to synthesise information from retrieved documents are the axes that count.
+
+We ran 500 real Lookinit queries through Groq (Llama 3), Anthropic's Claude, and Mistral, and measured the results. Here's what we found.
+
+## The Test Setup
+
+- 500 queries sampled from real Lookinit usage
+- Mix of factual questions, how-to queries, opinion questions, and technical questions
+- Each query run with identical retrieved context (same RAG pipeline)
+- Evaluated on: response time, factual accuracy, source usage, and coherence
+
+## Speed
+
+Groq wins by a significant margin thanks to its custom LPU inference hardware.
+
+| Model | Avg response time |
+|---|---|
+| Groq (Llama 3 70B) | 0.8s |
+| Mistral Large | 2.1s |
+| Claude Sonnet | 2.4s |
+
+For a search product where users expect near-instant responses, this matters.
+
+## Factual Accuracy
+
+Here the picture flips. Claude performed best on factual questions, particularly those requiring careful reading of retrieved documents.
+
+Groq was strong on straightforward factual queries but struggled more with nuanced questions that required weighing conflicting sources. Mistral sat in the middle.
+
+## Source Usage
+
+This is where we saw the starkest difference. Claude was significantly better at attributing claims to specific sources and acknowledging when retrieved content was insufficient. Groq and Mistral more often generated plausible-sounding answers that drifted from the provided context.
+
+For a search product built on trust and transparency, this matters enormously.
+
+## What We Do at Lookinit
+
+The answer was obvious: use both. We route queries based on their type:
+
+- **Speed-sensitive queries** (short factual questions, quick lookups) → Groq
+- **Complex queries** (multi-step reasoning, conflicting sources, technical depth) → Claude
+- **Code queries** → Mistral Codestral
+
+This hybrid routing gives us Groq's speed where it doesn't compromise quality, and Claude's accuracy where it does.
+
+## Conclusion
+
+There's no single best model for AI search. The right answer is to treat model selection as a routing problem, not a one-size-fits-all choice. Build the infrastructure to swap and combine models, and let the query type determine the path.

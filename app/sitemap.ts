@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPostSlugs } from "@/lib/hashnode";
+import { getPostSlugs } from "@/lib/blog";
 
 const BASE = "https://lookinit.com";
 
@@ -14,20 +14,13 @@ const staticRoutes: MetadataRoute.Sitemap = [
   { url: `${BASE}/terms`,         lastModified: new Date(), changeFrequency: "yearly",  priority: 0.3 },
 ];
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  let blogRoutes: MetadataRoute.Sitemap = [];
-
-  try {
-    const slugs = await getPostSlugs();
-    blogRoutes = slugs.map((slug) => ({
-      url: `${BASE}/blog/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    }));
-  } catch {
-    // Don't fail sitemap generation if Hashnode is unreachable
-  }
+export default function sitemap(): MetadataRoute.Sitemap {
+  const blogRoutes: MetadataRoute.Sitemap = getPostSlugs().map((slug) => ({
+    url: `${BASE}/blog/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
   return [...staticRoutes, ...blogRoutes];
 }
