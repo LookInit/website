@@ -60,7 +60,7 @@ We do not sell, rent, or share your personal data with third parties for marketi
         },
         {
           title: "4. Data Retention",
-          body: "Account data is retained for as long as your account is active. You may request deletion at any time by emailing privacy@lookinit.com. Search queries are retained for up to 90 days for quality improvement, after which they are anonymised.",
+          body: "Account data is retained for as long as your account is active. You may request deletion at any time by emailing hello@lookinit.com. Search queries are retained for up to 90 days for quality improvement, after which they are anonymised.",
         },
         {
           title: "5. Third-Party Services",
@@ -78,7 +78,7 @@ Each processor is bound by a data processing agreement and GDPR-compliant terms.
 • Request deletion ("right to be forgotten").
 • Restrict or object to processing.
 • Data portability.
-To exercise any of these rights, email privacy@lookinit.com.`,
+To exercise any of these rights, email hello@lookinit.com.`,
         },
         {
           title: "7. Security",
@@ -86,7 +86,7 @@ To exercise any of these rights, email privacy@lookinit.com.`,
         },
         {
           title: "8. Children",
-          body: "Lookinit is not directed at children under 13. We do not knowingly collect personal data from children. If you believe a child has provided us data, contact privacy@lookinit.com and we will delete it promptly.",
+          body: "Lookinit is not directed at children under 13. We do not knowingly collect personal data from children. If you believe a child has provided us data, contact hello@lookinit.com and we will delete it promptly.",
         },
         {
           title: "9. Changes to This Policy",
@@ -94,7 +94,7 @@ To exercise any of these rights, email privacy@lookinit.com.`,
         },
         {
           title: "10. Contact",
-          body: "Questions about this policy? Email privacy@lookinit.com.",
+          body: "Questions about this policy? Email hello@lookinit.com.",
         },
       ].map((section) => (
         <section key={section.title} style={{ marginBottom: "40px" }}>
